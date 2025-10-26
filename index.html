@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SANKU - Demo Funcional Profesional</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <link rel="stylesheet" href="style.css">
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+            }
+          }
+        }
+      }
+    </script>
+</head>
+<body class="bg-gray-100 antialiased min-h-screen flex items-center justify-center">
+
+    <div id="loginScreen" class="w-full max-w-5xl flex bg-white shadow-2xl rounded-2xl overflow-hidden mx-4">
+        <!-- Columna del Logo (siempre visible, ajustada para responsividad) -->
+        <div class="w-full md:w-1/3 bg-gradient-to-br from-blue-800 to-green-700 flex items-center justify-center p-6 md:p-8">
+            <div class="text-center">
+                <img src="img/logo.jpg" alt="Logo de SANKU" class="h-24 w-auto mx-auto mb-4 rounded-full" onerror="this.src='https://via.placeholder.com/100';">
+                <h1 class="text-4xl font-bold tracking-wider text-white">SANKU</h1>
+                <p class="text-xl font-light mt-2 text-blue-100">Vínculo Digital del Bienestar</p>
+            </div>
+        </div>
+
+        <!-- Columna del Formulario -->
+        <div class="w-full md:w-2/3 p-6 md:p-8">
+            <h2 class="text-3xl font-bold text-gray-800 mb-4">Bienvenido</h2>
+            <p class="text-gray-600 mb-6">Ingresa tus credenciales para acceder a la plataforma.</p>
+            
+            <form class="mt-6 space-y-6" onsubmit="app.handleLogin(event)">
+                <p id="loginError" class="text-red-500 text-sm font-medium hidden"></p>
+                <div>
+                    <label for="email" class="modal-label">Correo Electrónico</label>
+                    <input type="email" id="email" value="admin@sanku.com" class="modal-input" placeholder="tu@email.com" required/>
+                </div>
+                <div>
+                    <label for="password" class="modal-label">Contraseña</label>
+                    <input type="password" id="password" value="admin" class="modal-input" placeholder="********" required/>
+                </div>
+                <button type="submit" class="btn btn-primary w-full py-3">Iniciar Sesión</button>
+            </form>
+
+            <div class="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                <h4 class="font-semibold text-gray-700">Credenciales de Prueba:</h4>
+                <p class="text-sm text-gray-600 mt-2"><span class="font-medium">Admin:</span> admin@sanku.com / admin</p>
+                <p class="text-sm text-gray-600"><span class="font-medium">Psicólogo:</span> psi@sanku.com / psi</p>
+                <p class="text-sm text-gray-600"><span class="font-medium">Paciente:</span> paciente@sanku.com / paciente</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="mainApp" class="hidden h-screen bg-gray-100 md:flex">
+        <aside id="sidebar" class="w-64 bg-white shadow-lg flex flex-col flex-shrink-0">
+            <div class="flex items-center justify-center h-20 border-b px-4">
+                <img src="img/logo.jpg" alt="Logo de SANKU" class="h-10 w-auto rounded-full" onerror="this.src='https://via.placeholder.com/40';">
+                <span class="ml-3 text-2xl font-bold text-gray-800 tracking-wider">SANKU</span>
+            </div>
+            <nav id="navLinks" class="flex-1 overflow-y-auto py-6"></nav>
+            <div class="border-t p-4">
+                <a href="#" onclick="app.handleLogout()" class="nav-item logout-button">
+                    <ion-icon name="log-out-outline" class="h-6 w-6"></ion-icon>
+                    <span>Cerrar Sesión</span>
+                </a>
+            </div>
+        </aside>
+
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <header class="flex items-center justify-between h-20 px-6 bg-white border-b flex-shrink-0">
+                <h1 id="pageTitle" class="text-2xl md:text-3xl font-semibold text-gray-800"></h1>
+                <div class="flex items-center space-x-4">
+                    <div class="text-right">
+                        <span id="userName" class="font-semibold text-gray-800"></span>
+                        <span id="userRole" class="block text-sm text-gray-500 capitalize"></span>
+                    </div>
+                    <div id="userAvatar" class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-green-400 flex items-center justify-center text-white font-semibold"></div>
+                </div>
+            </header>
+
+            <main id="mainContent" class="flex-1 overflow-y-auto p-4 md:p-8"></main>
+        </div>
+    </div>
+
+    <div id="pacienteModal" class="modal-container hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle" class="text-2xl font-semibold text-gray-800"></h3>
+                <button onclick="app.closeModal()" class="text-gray-400 hover:text-gray-600 transition">
+                    <ion-icon name="close-outline" class="w-6 h-6"></ion-icon>
+                </button>
+            </div>
+            <div class="mt-5">
+                <form id="pacienteForm" onsubmit="app.handleSavePaciente(event)">
+                    <input type="hidden" id="pacienteId" name="pacienteId" />
+                    <div class="space-y-4">
+                        <div>
+                            <label for="nombre" class="modal-label">Nombre</label>
+                            <input type="text" id="nombre" name="nombre" class="modal-input" required />
+                        </div>
+                        <div>
+                            <label for="apellido" class="modal-label">Apellido</label>
+                            <input type="text" id="apellido" name="apellido" class="modal-input" required />
+                        </div>
+                        <div>
+                            <label for="fechaNacimiento" class="modal-label">Fecha de Nacimiento</label>
+                            <input type="date" id="fechaNacimiento" name="fechaNacimiento" class="modal-input" required />
+                        </div>
+                        <div>
+                            <label for="numeroDocumento" class="modal-label">N° Documento (DNI)</label>
+                            <input type="text" id="numeroDocumento" name="numeroDocumento" class="modal-input" required pattern="\d{8}" title="Debe contener 8 dígitos"/>
+                        </div>
+                        <div>
+                            <label for="genero" class="modal-label">Género</label>
+                            <select id="genero" name="genero" class="modal-input">
+                                <option>Femenino</option>
+                                <option>Masculino</option>
+                                <option>Otro</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" onclick="app.closeModal()" class="btn btn-secondary mr-3">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Guardar Paciente</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="personalModal" class="modal-container hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="personalModalTitle" class="text-2xl font-semibold text-gray-800">Nuevo Personal</h3>
+                <button onclick="app.closePersonalModal()" class="text-gray-400 hover:text-gray-600 transition">
+                    <ion-icon name="close-outline" class="w-6 h-6"></ion-icon>
+                </button>
+            </div>
+            <div class="mt-5">
+                <form id="personalForm" onsubmit="app.handleSavePersonal(event)">
+                    <input type="hidden" id="personalId" name="personalId" />
+                    <div class="space-y-4">
+                        <div>
+                            <label for="personalNombre" class="modal-label">Nombre Completo</label>
+                            <input type="text" id="personalNombre" name="personalNombre" class="modal-input" required />
+                        </div>
+                        <div>
+                            <label for="personalRol" class="modal-label">Rol</label>
+                            <select id="personalRol" name="personalRol" class="modal-input" required>
+                                <option value="">Seleccionar Rol</option>
+                                <option value="Psicólogo">Psicólogo</option>
+                                <option value="Administrador">Administrador</option>
+                                <option value="Asistente">Asistente</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="personalEmail" class="modal-label">Correo Electrónico</label>
+                            <input type="email" id="personalEmail" name="personalEmail" class="modal-input" required />
+                        </div>
+                        <div>
+                            <label for="personalSalario" class="modal-label">Salario Mensual (S/)</label>
+                            <input type="number" id="personalSalario" name="personalSalario" class="modal-input" required min="0" step="0.01" />
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" onclick="app.closePersonalModal()" class="btn btn-secondary mr-3">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Guardar Personal</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

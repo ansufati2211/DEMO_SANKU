@@ -1,0 +1,356 @@
+/* =================================================================== */
+/* ============== 1. CONFIGURACIÓN GLOBAL Y VARIABLES ================ */
+/* =================================================================== */
+
+/* Importación de la fuente 'Inter' */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* Definición de variables de color para fácil mantenimiento - Tonalidad sobria basada en el logo: azules y verdes atenuados */
+:root {
+    --color-primary: #2c5282;       /* Azul sobrio principal */
+    --color-primary-dark: #1a365d;  /* Azul oscuro para hover */
+    --color-accent: #276749;        /* Verde sobrio para acentos */
+    --color-text-dark: #2d3748;     /* Texto principal oscuro */
+    --color-text-medium: #4a5568;   /* Texto secundario */
+    --color-text-light: #718096;    /* Texto claro */
+    --color-bg-light: #f7fafc;      /* Fondo principal claro */
+    --color-bg-white: #ffffff;      /* Fondo blanco */
+    --color-border: #e2e8f0;        /* Bordes y divisores */
+    --color-success: #276749;       /* Verde sobrio para éxito */
+    --color-warning: #b7791f;       /* Amarillo atenuado para advertencia */
+    --color-danger: #9b2c2c;        /* Rojo sobrio para peligro */
+}
+
+/* Estilos base del cuerpo del documento */
+body {
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: var(--color-bg-light);
+    color: var(--color-text-medium);
+}
+
+/* Estilos personalizados para la barra de scroll */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: #edf2f7; }
+::-webkit-scrollbar-thumb { background: #a0aec0; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #718096; }
+
+/* Clase de utilidad para ocultar elementos de forma segura */
+.hidden {
+    display: none !important;
+}
+
+/* =================================================================== */
+/* ===================== 2. COMPONENTES REUTILIZABLES ================ */
+/* =================================================================== */
+
+/* --- Login Screen --- */
+#loginScreen {
+    max-width: 1200px;
+    width: 90%;
+}
+#loginScreen .bg-gradient-to-br {
+    min-height: 400px;
+}
+#loginScreen img {
+    max-width: 65%;
+    height: auto;
+}
+
+/* --- Barra de Navegación Lateral (Sidebar) --- */
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 1.5rem;
+    font-weight: 500;
+    color: var(--color-text-medium);
+    text-decoration: none;
+    border-right: 4px solid transparent;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+.nav-item:hover {
+    background-color: #f7fafc;
+    color: var(--color-text-dark);
+}
+.nav-item.active {
+    color: var(--color-primary);
+    background-color: #ebf8ff;
+    border-right-color: var(--color-primary);
+    font-weight: 600;
+}
+.nav-item ion-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+    flex-shrink: 0;
+}
+.logout-button {
+    color: var(--color-danger);
+}
+.logout-button:hover {
+    background-color: #fed7d7;
+    color: #742a2a;
+}
+
+/* --- Ventana Modal --- */
+.modal-container {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(26, 32, 44, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    z-index: 50;
+}
+.modal-content {
+    background-color: var(--color-bg-white);
+    border-radius: 0.75rem;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 32rem;
+    padding: 1.5rem;
+}
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--color-border);
+}
+.modal-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-text-medium);
+    margin-bottom: 0.5rem;
+}
+.modal-input {
+    display: block;
+    width: 100%;
+    padding: 0.625rem 0.75rem;
+    border: 1px solid #cbd5e0;
+    border-radius: 0.375rem;
+    box-shadow: inset 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.modal-input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(44, 82, 130, 0.3);
+}
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--color-border);
+}
+
+/* --- Botones --- */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    padding: 0.625rem 1.25rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    border: 1px solid transparent;
+    font-size: 0.875rem;
+    transition: all 0.2s ease-in-out;
+}
+.btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(44, 82, 130, 0.4);
+}
+.btn-primary {
+    background-color: var(--color-primary);
+    color: var(--color-bg-white);
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+.btn-primary:hover {
+    background-color: var(--color-primary-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+}
+.btn-secondary {
+    background-color: var(--color-bg-white);
+    color: var(--color-text-medium);
+    border: 1px solid #cbd5e0;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+.btn-secondary:hover {
+    background-color: #f7fafc;
+    border-color: #a0aec0;
+}
+.btn-add ion-icon {
+    margin-right: 0.5rem;
+}
+
+/* =================================================================== */
+/* ============================ 3. TABLAS ============================ */
+/* =================================================================== */
+
+.table-container {
+    background-color: var(--color-bg-white);
+    border-radius: 0.75rem;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+}
+.table-header {
+    padding: 1rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 1px solid var(--color-border);
+    background-color: #f7fafc;
+}
+@media (min-width: 768px) {
+    .table-header {
+        flex-direction: row;
+        align-items: center;
+    }
+}
+.table-content { overflow-x: auto; }
+.table { width: 100%; border-collapse: collapse; }
+.table thead { background-color: #f7fafc; }
+.table th {
+    padding: 0.75rem 1.5rem;
+    text-align: left;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+}
+.table tbody tr {
+    border-bottom: 1px solid var(--color-border);
+    transition: background-color 0.15s ease-in-out;
+}
+.table tbody tr:last-child { border-bottom: none; }
+.table tbody tr:hover { background-color: #f7fafc; }
+.table td {
+    padding: 1rem 1.5rem;
+    white-space: nowrap;
+    vertical-align: middle;
+    font-size: 0.875rem;
+    color: var(--color-text-medium);
+}
+.table-cell-primary-text { font-weight: 500; color: var(--color-text-dark); }
+.table-cell-secondary-text { color: var(--color-text-light); }
+
+/* --- Elementos dentro de la tabla --- */
+.table-cell-avatar { display: flex; align-items: center; gap: 1rem; }
+.table-avatar-icon { flex-shrink: 0; height: 2.5rem; width: 2.5rem; background-color: #e2e8f0; border-radius: 9999px; display: flex; align-items: center; justify-content: center; }
+.table-avatar-initials { font-weight: 600; color: var(--color-text-medium); }
+.table-cell-badge { padding: 0.25rem 0.75rem; display: inline-flex; font-size: 0.75rem; font-weight: 600; border-radius: 9999px; }
+/* Paleta de Badges sobria */
+.badge-pink { background-color: #fed7e2; color: #97266d; }
+.badge-blue { background-color: #ebf8ff; color: #2c5282; }
+.badge-green { background-color: #e6fffa; color: #276749; }
+.badge-yellow { background-color: #fefcbf; color: #975a16; }
+.badge-red { background-color: #fed7d7; color: #9b2c2c; }
+.badge-gray { background-color: #f7fafc; color: var(--color-text-medium); }
+
+/* --- Botones de Acción en Tabla --- */
+.table-cell-action { display: flex; gap: 0.5rem; }
+.table-cell-action button { background: none; border: none; padding: 0.25rem; cursor: pointer; color: var(--color-text-light); border-radius: 9999px; transition: background-color 0.2s ease, color 0.2s ease;}
+.table-cell-action button:hover { background-color: #e2e8f0; color: var(--color-text-dark); }
+.table-cell-action button.delete:hover { background-color: #fed7d7; color: #742a2a; }
+.table-cell-action button.disabled { color: #cbd5e0; cursor: not-allowed; }
+.table-cell-action button.disabled:hover { background-color: transparent; }
+.table-cell-action ion-icon { width: 1.25rem; height: 1.25rem; vertical-align: middle; }
+
+/* =================================================================== */
+/* ========================== 4. DASHBOARD =========================== */
+/* =================================================================== */
+
+#chartContainer {
+    position: relative;
+    height: 300px;
+    width: 100%;
+}
+
+.dashboard-card {
+    background-color: var(--color-bg-white);
+    padding: 1.5rem;
+    border-radius: 0.75rem;
+    border: 1px solid var(--color-border);
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05);
+    transition: box-shadow 0.2s ease-in-out, transform 0.2s ease-in-out;
+}
+.dashboard-card:hover {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+.dashboard-card-title {
+    color: var(--color-text-light);
+    font-weight: 500;
+    font-size: 0.875rem;
+}
+.dashboard-card-value {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: var(--color-text-dark);
+    margin-top: 0.5rem;
+    line-height: 1.2;
+}
+/* Colores específicos para valores sobrios */
+.value-green { color: var(--color-success); }
+.value-yellow { color: var(--color-warning); }
+.value-red { color: var(--color-danger); }
+
+/* Estilos para Reportes Contables */
+.report-section {
+    background-color: var(--color-bg-white);
+    border-radius: 0.75rem;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+.report-controls {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+}
+.report-controls select, .report-controls input {
+    padding: 0.5rem;
+    border: 1px solid var(--color-border);
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+}
+
+/* =================================================================== */
+/* ======================= 5. RESPONSIVIDAD ========================== */
+/* =================================================================== */
+
+@media (max-width: 768px) {
+    #loginScreen .bg-gradient-to-br {
+        display: none;
+    }
+    #loginScreen .w-full.md\:w-2\/3 {
+        width: 100%;
+    }
+    .table th, .table td {
+        padding: 0.75rem 1rem;
+        white-space: normal;
+    }
+    .modal-footer {
+        flex-direction: column-reverse;
+        align-items: stretch;
+        gap: 0.5rem;
+    }
+    .modal-footer button {
+        width: 100%;
+        margin: 0;
+    }
+    .report-controls {
+        flex-direction: column;
+    }
+}
